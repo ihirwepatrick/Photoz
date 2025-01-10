@@ -1,13 +1,21 @@
 package com.nipcts.ihirwe.photoz_clone;
 
-import jakarta.validation.Valid;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.io.IOException;
-import java.util.*;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:8081")
@@ -36,7 +44,7 @@ public class PhotozController {
     }
     //created the photo by creating the photo id using a mark annotation @RequestBody to change the photo into the Photo object
     // used the validation to prevent empty files
-    @PostMapping("/photoz/")
+    @PostMapping("/photoz")
         public Photo create(@RequestPart("data") MultipartFile file) throws IOException {
         Photo photo = new Photo();
         photo.setId(UUID.randomUUID().toString());

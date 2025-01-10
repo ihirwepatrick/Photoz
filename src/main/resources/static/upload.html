@@ -25,7 +25,7 @@
         try {
             const response = await fetch('http://localhost:8081/photoz', {
                 method: "POST",
-                mode: "no-cors", // Disable CORS (opaque response)
+                mode: "cors", // Disable CORS (opaque response)
                 body: formData
             });
 
