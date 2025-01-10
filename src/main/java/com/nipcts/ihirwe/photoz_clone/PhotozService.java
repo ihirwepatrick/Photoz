@@ -3,6 +3,7 @@ package com.nipcts.ihirwe.photoz_clone;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,10 @@ public class PhotozService {
         return db.remove(id);
     }
 
-    public Photo save(Photo photo) {
+    public Photo save(byte [] data, String filename) {
+        Photo photo = new Photo(UUID.randomUUID().toString(), filename);
+        photo.setData(data);
+        photo.setFileName(filename);
         db.put(photo.getId(), photo);
         return photo;
     }
