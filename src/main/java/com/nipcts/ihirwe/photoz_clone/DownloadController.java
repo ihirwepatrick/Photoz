@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class DonwloadController {
+public class DownloadController {
     @Autowired
     private PhotozService photozService;
 
@@ -22,4 +22,4 @@ public class DonwloadController {
         headers.setContentType(MediaType.valueOf(photo.getContentType()));
         return new ResponseEntity<>(data, headers, HttpStatus.OK);
     }
-}
+} 
