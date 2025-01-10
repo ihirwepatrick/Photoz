@@ -2,9 +2,12 @@ package com.nipcts.ihirwe.photoz_clone;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.UUID;
 
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,10 +36,15 @@ public class PhotozController {
         return photozService.getAll();
     }
     @GetMapping("/photoz/{id}")
-    public Photo get(@PathVariable String id) {
+    public ResponseEntity<byte[]> get(@PathVariable String id) {
         Photo photo = photozService.getById(id);
         if(photo == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        return photo;
+        byte[] data = photo.getData();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.valueOf(photo.getContentType()));
+        ContentDisposition contentDisposition = ContentDisposition.builder("attachment").filename(photo.getFileName()).build();
+        headers.setContentDisposition(contentDisposition);
+        return new ResponseEntity<>(data, headers, HttpStatus.OK);
     }
     @DeleteMapping("/photoz/{id}")
     public void delete(@PathVariable String id) {
@@ -47,10 +55,12 @@ public class PhotozController {
     // used the validation to prevent empty files
     @PostMapping("/photoz")
     public Photo create(@RequestPart("data") MultipartFile file) throws IOException {
-        Photo photo = new Photo();
-        photo.setId(UUID.randomUUID().toString());
-        photo.setFileName(file.getOriginalFilename());
-        photo.setData(file.getBytes());
-        return photozService.save(file.getBytes(), file.getOriginalFilename());
+        Photo photo = photozService.save(
+            file.getBytes(), 
+            file.getOriginalFilename(),
+            file.getContentType()
+        );
+        System.out.println("Uploaded photo ID: " + photo.getId());
+        return photo;
     }
 }
